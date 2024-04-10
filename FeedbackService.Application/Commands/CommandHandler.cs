@@ -14,9 +14,9 @@ public abstract class CommandHandler<TCommand, TResult> : IRequestHandler<TComma
         {
             AssertCommandValid(command);
 
-            var result = await action.Invoke(command);
+            response = await action.Invoke(command);
 
-            if (result.Success)
+            if (response.Success)
                 return response;
         }
         catch (ParametersNullException ex)

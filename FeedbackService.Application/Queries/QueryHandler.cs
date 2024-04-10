@@ -12,22 +12,20 @@ namespace FeedbackService.Application.Queries
             var response = new Response<TResult>();
             try
             {
-                var result = await action.Invoke(query);
+                response = await action.Invoke(query);
 
-                if (result != null)
+                if (response != null)
                     return response;
-            }
-            catch (ArgumentNullException ex)
-            {
-                response.Message = ex.Message;
             }
             catch (ValidationException ex)
             {
                 response.Message = ex.Message;
+                response.StatusCode = ex.StatusCode;
             }
             catch (EmptyListException ex)
             {
                 response.Message = ex.Message;
+                response.StatusCode = ex.StatusCode;
             }
             catch (Exception ex)
             {

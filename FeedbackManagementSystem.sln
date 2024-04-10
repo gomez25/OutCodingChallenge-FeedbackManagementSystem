@@ -19,8 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeedbackService", "Feedback
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer Files", "SqlServer Files", "{AA6FC20C-2F9C-4A1F-80AB-0F74004F2D44}"
 	ProjectSection(SolutionItems) = preProject
-		CreateFeedBackUser.sql = CreateFeedBackUser.sql
 		FeedbackSystem.sql = FeedbackSystem.sql
+		CreateFeedbackUser.sql = CreateFeedbackUser.sql
 	EndProjectSection
 EndProject
 Global

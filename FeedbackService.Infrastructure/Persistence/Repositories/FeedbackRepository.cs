@@ -16,14 +16,14 @@ internal class FeedbackRepository(FeedbackContext context) : IFeedbackRepository
     #region Methods
     public async Task<bool> AddAsync(Feedback newFeedback)
     {
-        _context.Add(newFeedback);
+        _context.Feedbacks.Add(newFeedback);
         return await _context.SaveChangesAsync() > 0;
     }
 
     public async Task<List<FeedbackDto>> GetLastMonthAsync()
     {
-        var startDate = DateTime.Now.AddMonths(-1);
-        var endDate = DateTime.Now;
+        var startDate = DateTime.UtcNow.AddMonths(-1);
+        var endDate = DateTime.UtcNow;
 
         var result = await (from feedback in _context.Feedbacks
                             join category in _context.Categories
@@ -31,8 +31,10 @@ internal class FeedbackRepository(FeedbackContext context) : IFeedbackRepository
                             where feedback.SubmissionDate >= startDate && feedback.SubmissionDate <= endDate
                             select new FeedbackDto
                             {
+                                Id = feedback.Id,
                                 CustomerName = feedback.CustomerName,
                                 CategoryName = category.Name,
+                                CategoryId = category.Id,
                                 Description = feedback.Description,
                                 SubmissionDate = feedback.SubmissionDate
                             }).ToListAsync();
@@ -45,7 +47,7 @@ internal class FeedbackRepository(FeedbackContext context) : IFeedbackRepository
 
     public async Task<bool> UpdateAsync(Feedback existingFeedback)
     {
-        _context.Update(existingFeedback);
+        _context.Feedbacks.Update(existingFeedback);
         return await _context.SaveChangesAsync() > 0;
     }
     #endregion

@@ -28,6 +28,7 @@ public class AddFeedbackCommandHandler(AddFeedbackCommandValidator validator, IU
         {
             CustomerName = command.CustomerName,
             CategoryId = command.CategoryId,
+            Description = command.Description,
             SubmissionDate = DateTime.UtcNow
         };
 
