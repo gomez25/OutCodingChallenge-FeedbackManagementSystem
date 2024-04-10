@@ -1,6 +1,5 @@
 ﻿using FeedbackService.Application.Queries.GetCategories;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedbackService.Controllers
