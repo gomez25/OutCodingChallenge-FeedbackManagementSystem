@@ -56,5 +56,23 @@ namespace FeedbackManagementSystem.Controllers
                 return NotFound();
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(FeedbackViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await ServiceHelper.PutAsync("api/Feedback", model);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            await ServiceHelper.DeleteAsync($"api/Feedback/{id}");
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

@@ -56,5 +56,16 @@ namespace FeedbackManagementSystem.Services
 
             HttpResponseMessage response = await client.PutAsync(endpoint, content);
         }
+
+        public async static Task DeleteAsync(string endpoint)
+        {
+            using var client = new HttpClient();
+
+            client.BaseAddress = new Uri(Baseurl);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage response = await client.DeleteAsync(endpoint);
+        }
     }
 }

@@ -29,24 +29,27 @@ namespace FeedbackService.Application.Commands.DeleteFeedback
             if (!validation.IsValid)
                 throw new ValidationException(validation.Errors.ErrorsToString());
 
-            //Create a new feedback model
-            var newFeedback = new Feedback()
+            var existingFeedback = await _unitOfWork.Feedback.GetFeedbackById(command.Id);
+
+            //Mapping the model 
+            var feedback = new Feedback
             {
-                CustomerName = command.CustomerName,
-                CategoryId = command.CategoryId,
-                Description = command.Description,
-                SubmissionDate = DateTime.UtcNow
+                Id = existingFeedback.Id,
+                CustomerName = existingFeedback.CustomerName,
+                CategoryId = existingFeedback.CategoryId,
+                Description = existingFeedback.Description,
+                SubmissionDate = existingFeedback.SubmissionDate
             };
 
             //Delete the feedback
-            var response = await _unitOfWork.Feedback.DeleteAsync(newFeedback);
+            var response = await _unitOfWork.Feedback.DeleteAsync(feedback);
 
             if (!response)
             {
                 return new Response<bool>
                 {
                     Data = response,
-                    Message = "The feedback can't be Deleteed"
+                    Message = "The feedback can't be deleted"
                 };
             }
 
@@ -54,8 +57,9 @@ namespace FeedbackService.Application.Commands.DeleteFeedback
             {
                 Success = true,
                 Data = response,
-                Message = "The feedback was Deleteed successfully"
+                Message = "The feedback was deleted successfully"
             };
         }, command);
         #endregion
     }
+}

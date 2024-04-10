@@ -20,6 +20,31 @@ internal class FeedbackRepository(FeedbackContext context) : IFeedbackRepository
         return await _context.SaveChangesAsync() > 0;
     }
 
+    public async Task<bool> DeleteAsync(Feedback feedback)
+    {
+        _context.Feedbacks.Remove(feedback);
+        return await _context.SaveChangesAsync() > 0;
+    }
+
+    public async Task<FeedbackDto> GetFeedbackById(int id)
+    {
+        var result = await(from feedback in _context.Feedbacks
+                           join category in _context.Categories
+                           on feedback.CategoryId equals category.Id
+                           where feedback.Id == id
+                           select new FeedbackDto
+                           {
+                               Id = feedback.Id,
+                               CustomerName = feedback.CustomerName,
+                               CategoryName = category.Name,
+                               CategoryId = category.Id,
+                               Description = feedback.Description,
+                               SubmissionDate = feedback.SubmissionDate
+                           }).FirstOrDefaultAsync();
+
+        return result ?? throw new NotFoundException("Feedback was not found");
+    }
+
     public async Task<List<FeedbackDto>> GetLastMonthAsync()
     {
         var startDate = DateTime.UtcNow.AddMonths(-1);

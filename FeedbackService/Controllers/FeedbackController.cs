@@ -28,7 +28,7 @@ namespace FeedbackService.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAll(int id)
+        public async Task<IActionResult> Get(int id)
         {
             var response = await _mediator.Send(new GetFeedbackByIdQuery() { Id = id});
             if (response.Success)
@@ -59,10 +59,10 @@ namespace FeedbackService.Controllers
                 return StatusCode(response.StatusCode, response.Message);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(DeleteFeedbackCommand command)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var response = await _mediator.Send(command);
+            var response = await _mediator.Send(new DeleteFeedbackCommand { Id = id});
 
             if (response.Success)
                 return Ok(response.Data);
