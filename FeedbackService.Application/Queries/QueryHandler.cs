@@ -25,6 +25,10 @@ namespace FeedbackService.Application.Queries
             {
                 response.Message = ex.Message;
             }
+            catch (EmptyListException ex)
+            {
+                response.Message = ex.Message;
+            }
             catch (Exception ex)
             {
                 response.Message = ex.Message;

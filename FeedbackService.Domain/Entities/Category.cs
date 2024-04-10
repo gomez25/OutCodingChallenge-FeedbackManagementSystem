@@ -10,7 +10,7 @@ namespace FeedbackService.Domain.Entities
         #endregion
 
         #region Foreign Keys
-        public Feedback Feedback { get; set; }
+        public ICollection<Feedback> Feedbacks { get; set; }
         #endregion
     }
 }

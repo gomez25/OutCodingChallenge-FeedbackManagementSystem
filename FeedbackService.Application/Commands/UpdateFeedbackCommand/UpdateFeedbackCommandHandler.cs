@@ -1,4 +1,5 @@
 ﻿using FeedbackService.Application.Extensions;
+using FeedbackService.Domain.Entities;
 using FeedbackService.Domain.Repositories;
 using FeedbackService.Domain.Shared;
 using System.ComponentModel.DataAnnotations;
@@ -22,14 +23,15 @@ internal class UpdateFeedbackCommandHandler(UpdateFeedbackCommandValidator valid
         if (!validation.IsValid)
             throw new ValidationException(validation.Errors.ErrorsToString());
 
-        //Return the existing feedback by id
-        var existingFeedback = await _unitOfWork.Feedback.GetFeedbackById(command.Id);
-
-        //Update the existing feedback model
-        existingFeedback.CustomerName = command.CustomerName;
-        existingFeedback.CategoryId = command.CategoryId;
-        existingFeedback.Description = command.Description;
-        existingFeedback.SubmissionDate = DateTime.UtcNow;
+        //Create Feedback Model
+        var existingFeedback = new Feedback
+        {
+            Id = command.Id,
+            CustomerName = command.CustomerName,
+            Description = command.Description,
+            CategoryId = command.CategoryId,
+            SubmissionDate = DateTime.UtcNow
+        };
 
 
         //Update the feedback

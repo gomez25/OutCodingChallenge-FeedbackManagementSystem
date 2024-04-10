@@ -1,14 +1,6 @@
-﻿using System;
+﻿namespace FeedbackService.Domain.Exceptions;
 
-namespace FeedbackService.Domain.Exceptions
+public class ParametersNullException(string message) : Exception(message)
 {
-    public class ParametersNullException : Exception
-    {
-        public ParametersNullException(string message) : base(message)
-        {
-
-        }
-        public int StatusCode { get; } = 400;
-    }
-
+    public int StatusCode { get; } = 400;
 }

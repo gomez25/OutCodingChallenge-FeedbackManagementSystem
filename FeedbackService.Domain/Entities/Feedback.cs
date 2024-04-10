@@ -14,7 +14,7 @@ namespace FeedbackService.Domain.Entities
         #endregion
 
         #region Foreign Keys
-        public ICollection<Category> Categories { get; set; }
+        public Category Category { get; set; }
         #endregion
     }
 }
