@@ -1,6 +1,6 @@
-# Feedback Service API
+# Feedback Service API and Feedback Management System
 
-This repository contains the source code for a Feedback Service API built using ASP.NET Core and MediatR for handling commands and queries. The API allows users to manage feedback entries and categories associated with them.
+This repository contains the source code for a comment service API built with ASP.NET Core and MediatR to handle commands and queries. The API allows users to manage comment entries and categories associated with them. And a Feedback Management System project created with ASP.NET MVC 5 that provides a web page to manage all feedbacks, including a main web page that returns all feedbacks from the last month categorized by category name and each feedback can be edited or deleted and have an extra button is needed to create a new feedback.
 
 ## Setup Instructions
 
@@ -78,7 +78,7 @@ This repository contains the source code for a Feedback Service API built using 
 - **FluentValidation**: A popular .NET library for building strongly-typed validation rules.
 
 ## Design Patterns and Principles Used
--**CQRS**: To make a more orderly separation, thinking about the scalability, flexibility and optimization that this pattern offers us.
--**Unit Of Work**: To maintain consistency and transactional integrity across multiple database operations.
--**Abstraction**: Fundamental principle of software design that promotes modularity, maintainability, and testability.
--**Repository**: To abstract the data access logic from the rest of the application. It defines a set of methods for performing CRUD (Create, Read, Update, Delete) operations on data entities without exposing the underlying data access mechanisms.
+- **CQRS**: To make a more orderly separation, thinking about the scalability, flexibility and optimization that this pattern offers us.
+- **Unit Of Work**: To maintain consistency and transactional integrity across multiple database operations.
+- **Abstraction**: Fundamental principle of software design that promotes modularity, maintainability, and testability.
+- **Repository**: To abstract the data access logic from the rest of the application. It defines a set of methods for performing CRUD (Create, Read, Update, Delete) operations on data entities without exposing the underlying data access mechanisms.
