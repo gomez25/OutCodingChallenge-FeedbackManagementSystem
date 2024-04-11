@@ -1,0 +1,26 @@
+﻿.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+    .table th {
+        background-color: #f2f2f2;
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table a {
+        color: #ffffff;
+        text-decoration: none;
+        margin-right: 5px;
+    }
+
+        .table a:hover {
+            text-decoration: underline;
+        }

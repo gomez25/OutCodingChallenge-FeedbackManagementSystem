@@ -4,10 +4,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Feedback List</h2>
+<h2>Feedback of the last month</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <a href="@Url.Action("Create")" class="btn btn-success">Create New</a>
 </p>
 
 <table class="table">
@@ -37,8 +37,12 @@
                 @Html.DisplayFor(modelItem => item.CategoryName)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Delete
+                </a>
             </td>
         </tr>
     }

@@ -1,0 +1,30 @@
+﻿.control-label {
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.btn-default {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+    .btn-default:hover {
+        background-color: #0056b3;
+    }
+
+.text-danger {
+    color: #dc3545;
+    font-size: 14px;
+}
