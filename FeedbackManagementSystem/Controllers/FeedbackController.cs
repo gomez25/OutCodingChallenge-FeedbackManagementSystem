@@ -16,7 +16,7 @@ namespace FeedbackManagementSystem.Controllers
             var response = await ServiceHelper.GetAsync<JObject>("api/Feedback");
             var feedbackList = response["getLastMonthFeedbackList"].ToObject<IEnumerable<FeedbackViewModel>>();
 
-            return View(feedbackList);
+            return View("Index", feedbackList);
         }
         public async Task<IActionResult> Create()
         {
@@ -73,6 +73,5 @@ namespace FeedbackManagementSystem.Controllers
             await ServiceHelper.DeleteAsync($"api/Feedback/{id}");
             return RedirectToAction(nameof(Index));
         }
-
     }
 }
