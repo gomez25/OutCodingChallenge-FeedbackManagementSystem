@@ -78,7 +78,7 @@ This repository contains the source code for a comment service API built with AS
 - **FluentValidation**: A popular .NET library for building strongly-typed validation rules.
 
 ## Design Patterns and Principles Used
--**CQRS**: To make a more orderly separation, thinking about the scalability, flexibility and optimization that this pattern offers us.
--**Unit Of Work**: To maintain consistency and transactional integrity across multiple database operations.
--**Abstraction**: Fundamental principle of software design that promotes modularity, maintainability, and testability.
--**Repository**: To abstract the data access logic from the rest of the application. It defines a set of methods for performing CRUD (Create, Read, Update, Delete) operations on data entities without exposing the underlying data access mechanisms.
+- **CQRS**: To make a more orderly separation, thinking about the scalability, flexibility and optimization that this pattern offers us.
+- **Unit Of Work**: To maintain consistency and transactional integrity across multiple database operations.
+- **Abstraction**: Fundamental principle of software design that promotes modularity, maintainability, and testability.
+- **Repository**: To abstract the data access logic from the rest of the application. It defines a set of methods for performing CRUD (Create, Read, Update, Delete) operations on data entities without exposing the underlying data access mechanisms.
