@@ -8,7 +8,7 @@ namespace FeedbackService.Domain.Repositories
         Task<bool> AddAsync(Feedback newFeedback);
         Task<bool> DeleteAsync(Feedback feedback);
         Task<FeedbackDto> GetFeedbackById(int id);
-        Task<List<FeedbackDto>> GetLastMonthAsync();
+        Task<IEnumerable<CategoryFeedbackDto>> GetLastMonthAsync();
         Task<bool> UpdateAsync(Feedback existingFeedback);
     }
 }

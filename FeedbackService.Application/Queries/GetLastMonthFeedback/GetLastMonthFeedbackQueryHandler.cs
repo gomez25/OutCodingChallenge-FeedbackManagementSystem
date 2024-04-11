@@ -24,9 +24,9 @@ namespace FeedbackService.Application.Queries.GetLastMonthFeedback
                 Success = true,
                 Data = new GetLastMonthFeedbackQueryResult
                 {
-                    GetLastMonthFeedbackList = lastMonthFeedbackList
+                    GetLastMonthFeedbackList = lastMonthFeedbackList.ToList()
                 },
-                Message = "The feedback was updated successfully"
+                Message = "Returning the feedback of the last month successfully"
             };
         }, query);
         #endregion

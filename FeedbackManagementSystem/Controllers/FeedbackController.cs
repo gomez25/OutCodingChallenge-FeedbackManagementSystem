@@ -14,10 +14,11 @@ namespace FeedbackManagementSystem.Controllers
         public async Task<IActionResult> Index()
         {
             var response = await ServiceHelper.GetAsync<JObject>("api/Feedback");
-            var feedbackList = response["getLastMonthFeedbackList"].ToObject<IEnumerable<FeedbackViewModel>>();
+            var feedbackList = response["getLastMonthFeedbackList"].ToObject<IEnumerable<CategoryFeedbackViewModel>>();
 
             return View("Index", feedbackList);
         }
+
         public async Task<IActionResult> Create()
         {
             var response = await ServiceHelper.GetAsync<JObject>("api/Category");

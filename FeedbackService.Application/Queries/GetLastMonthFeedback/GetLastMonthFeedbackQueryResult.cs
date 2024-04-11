@@ -4,6 +4,6 @@ namespace FeedbackService.Application.Queries.GetLastMonthFeedback
 {
     public class GetLastMonthFeedbackQueryResult
     {
-        public List<FeedbackDto> GetLastMonthFeedbackList { get; set; }
+        public List<CategoryFeedbackDto> GetLastMonthFeedbackList { get; set; }
     }
 }
