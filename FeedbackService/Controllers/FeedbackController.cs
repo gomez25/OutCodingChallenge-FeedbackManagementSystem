@@ -28,7 +28,7 @@ namespace FeedbackService.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
             var response = await _mediator.Send(new GetFeedbackByIdQuery() { Id = id});
             if (response.Success)
@@ -38,7 +38,7 @@ namespace FeedbackService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(AddFeedbackCommand command)
+        public async Task<IActionResult> Add([FromBody] AddFeedbackCommand command)
         {
             var response = await _mediator.Send(command);
 
@@ -49,7 +49,7 @@ namespace FeedbackService.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateFeedbackCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateFeedbackCommand command)
         {
             var response = await _mediator.Send(command);
 
@@ -60,7 +60,7 @@ namespace FeedbackService.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var response = await _mediator.Send(new DeleteFeedbackCommand { Id = id});
 
