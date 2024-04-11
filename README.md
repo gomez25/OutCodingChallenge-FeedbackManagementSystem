@@ -72,3 +72,13 @@ This repository contains the source code for a Feedback Service API built using 
 ## Dependencies
 - **MediatR**: A simple, unambitious mediator implementation in .NET.
 - **Microsoft.AspNetCore.Mvc**: Provides support for building web APIs.
+- **Microsoft.EntityFrameworkCore**: Entity Framework Core is a lightweight, extensible, and cross-platform version of the popular Entity Framework data access technology.
+- **Microsoft.EntityFrameworkCore.SqlServer**: EF Core SQL Server database provider allows EF Core to be used with Microsoft SQL Server.
+- **Microsoft.EntityFrameworkCore.Design**: Provides design-time support for Entity Framework Core tools.
+- **FluentValidation**: A popular .NET library for building strongly-typed validation rules.
+
+## Design Patterns and Principles Used
+-**CQRS**: To make a more orderly separation, thinking about the scalability, flexibility and optimization that this pattern offers us.
+-**Unit Of Work**: To maintain consistency and transactional integrity across multiple database operations.
+-**Abstraction**: Fundamental principle of software design that promotes modularity, maintainability, and testability.
+-**Repository**: To abstract the data access logic from the rest of the application. It defines a set of methods for performing CRUD (Create, Read, Update, Delete) operations on data entities without exposing the underlying data access mechanisms.
