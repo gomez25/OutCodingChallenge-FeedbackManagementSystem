@@ -11,8 +11,7 @@ This repository contains the source code for a comment service API built with AS
 ### Database Setup
 1. Open SQL Server Management Studio.
 2. Execute the SQL files provided in the solution to create the necessary database schema:
-   - `CreateFeedbackUser.sql`: Creates the user for database access.
-   - `FeedbackSystem.sql`: Creates the database with two categories.
+   - `FeedbackSystem.sql`: Create the database, stored procedures and 3 categories.
 3. Make sure to note down the connection string for the created database as it will be required for configuring the API.
 
 ### Running the Projects
