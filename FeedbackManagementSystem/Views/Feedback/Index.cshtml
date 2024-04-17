@@ -13,7 +13,7 @@
 
 @foreach (var categoryFeedback in Model)
 {
-    <h3>@categoryFeedback.CategoryName</h3>
+    <h3>@Html.Encode(categoryFeedback.CategoryName)</h3>
     <table class="table">
         <tr>
             <th>
@@ -29,10 +29,10 @@
         {
             <tr>
                 <td>
-                    @feedback.CustomerName
+                    @Html.Encode(feedback.CustomerName)
                 </td>
                 <td>
-                    @feedback.Description
+                    @Html.Encode(feedback.Description)
                 </td>
                 <td>
                     <a href="@Url.Action("Edit", new { id = feedback.Id })" class="btn btn-secondary">

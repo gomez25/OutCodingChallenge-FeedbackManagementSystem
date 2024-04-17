@@ -9,12 +9,12 @@ namespace FeedbackManagementSystem.Services
 {
     public class ServiceHelper
     {
-        private const string Baseurl = "http://localhost:5070/";
-        public async  static Task<T> GetAsync<T>(string endpoint)
+
+        public async static Task<T> GetAsync<T>(string baseUrl, string endpoint)
         {
             using var client = new HttpClient();
 
-            client.BaseAddress = new Uri(Baseurl);
+            client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Clear();
 
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -29,11 +29,11 @@ namespace FeedbackManagementSystem.Services
             return default;
         }
 
-        public async static Task PostAsync<T>(string endpoint, T data)
+        public async static Task PostAsync<T>(string baseUrl, string endpoint, T data)
         {
             using var client = new HttpClient();
 
-            client.BaseAddress = new Uri(Baseurl);
+            client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -43,11 +43,11 @@ namespace FeedbackManagementSystem.Services
             HttpResponseMessage response = await client.PostAsync(endpoint, content);
         }
 
-        public async static Task PutAsync<T>(string endpoint, T data)
+        public async static Task PutAsync<T>(string baseUrl, string endpoint, T data)
         {
             using var client = new HttpClient();
 
-            client.BaseAddress = new Uri(Baseurl);
+            client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -57,11 +57,11 @@ namespace FeedbackManagementSystem.Services
             HttpResponseMessage response = await client.PutAsync(endpoint, content);
         }
 
-        public async static Task DeleteAsync(string endpoint)
+        public async static Task DeleteAsync(string baseUrl, string endpoint)
         {
             using var client = new HttpClient();
 
-            client.BaseAddress = new Uri(Baseurl);
+            client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 

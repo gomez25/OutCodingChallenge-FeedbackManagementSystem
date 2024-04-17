@@ -29,20 +29,8 @@ namespace FeedbackService.Application.Commands.DeleteFeedback
             if (!validation.IsValid)
                 throw new ValidationException(validation.Errors.ErrorsToString());
 
-            var existingFeedback = await _unitOfWork.Feedback.GetFeedbackById(command.Id);
-
-            //Mapping the model 
-            var feedback = new Feedback
-            {
-                Id = existingFeedback.Id,
-                CustomerName = existingFeedback.CustomerName,
-                CategoryId = existingFeedback.CategoryId,
-                Description = existingFeedback.Description,
-                SubmissionDate = existingFeedback.SubmissionDate
-            };
-
             //Delete the feedback
-            var response = await _unitOfWork.Feedback.DeleteAsync(feedback);
+            var response = await _unitOfWork.Feedback.DeleteAsync(command.Id);
 
             if (!response)
             {

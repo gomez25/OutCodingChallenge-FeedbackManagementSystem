@@ -1,159 +1,212 @@
-﻿USE [master]
+﻿USE master
 GO
 
-CREATE DATABASE [FeedbackSystem]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'FeedbackSystem', FILENAME = N'D:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\FeedbackSystem.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'FeedbackSystem_log', FILENAME = N'D:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\FeedbackSystem_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
- WITH CATALOG_COLLATION = DATABASE_DEFAULT
-GO
-ALTER DATABASE [FeedbackSystem] SET COMPATIBILITY_LEVEL = 150
-GO
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [FeedbackSystem].[dbo].[sp_fulltext_database] @action = 'enable'
-end
-GO
-ALTER DATABASE [FeedbackSystem] SET ANSI_NULL_DEFAULT OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET ANSI_NULLS OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET ANSI_PADDING OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET ANSI_WARNINGS OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET ARITHABORT OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET AUTO_CLOSE OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET AUTO_SHRINK OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET AUTO_UPDATE_STATISTICS ON 
-GO
-ALTER DATABASE [FeedbackSystem] SET CURSOR_CLOSE_ON_COMMIT OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET CURSOR_DEFAULT  GLOBAL 
-GO
-ALTER DATABASE [FeedbackSystem] SET CONCAT_NULL_YIELDS_NULL OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET NUMERIC_ROUNDABORT OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET QUOTED_IDENTIFIER OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET RECURSIVE_TRIGGERS OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET  DISABLE_BROKER 
-GO
-ALTER DATABASE [FeedbackSystem] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET DATE_CORRELATION_OPTIMIZATION OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET TRUSTWORTHY OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET ALLOW_SNAPSHOT_ISOLATION OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET PARAMETERIZATION SIMPLE 
-GO
-ALTER DATABASE [FeedbackSystem] SET READ_COMMITTED_SNAPSHOT OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET HONOR_BROKER_PRIORITY OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET RECOVERY FULL 
-GO
-ALTER DATABASE [FeedbackSystem] SET  MULTI_USER 
-GO
-ALTER DATABASE [FeedbackSystem] SET PAGE_VERIFY CHECKSUM  
-GO
-ALTER DATABASE [FeedbackSystem] SET DB_CHAINING OFF 
-GO
-ALTER DATABASE [FeedbackSystem] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
-GO
-ALTER DATABASE [FeedbackSystem] SET TARGET_RECOVERY_TIME = 60 SECONDS 
-GO
-ALTER DATABASE [FeedbackSystem] SET DELAYED_DURABILITY = DISABLED 
-GO
-ALTER DATABASE [FeedbackSystem] SET ACCELERATED_DATABASE_RECOVERY = OFF  
-GO
-EXEC sys.sp_db_vardecimal_storage_format N'FeedbackSystem', N'ON'
-GO
-ALTER DATABASE [FeedbackSystem] SET QUERY_STORE = OFF
-GO
-USE [FeedbackSystem]
+IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = 'FeedbackSystem')
+BEGIN
+    -- Create the database FeedbackSystem
+    CREATE DATABASE FeedbackSystem
+END
 GO
 
-CREATE USER [FeedbackUser] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
+USE FeedbackSystem
 GO
 
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[__EFMigrationsHistory](
-	[MigrationId] [nvarchar](150) NOT NULL,
-	[ProductVersion] [nvarchar](32) NOT NULL,
- CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED 
-(
-	[MigrationId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Categories')
+BEGIN
+    -- Create the Categories table
+    CREATE TABLE Categories (
+        Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+        Name NVARCHAR(MAX) NOT NULL
+    )
+END
 GO
 
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Categories](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](max) NOT NULL,
-	[Description] [nvarchar](max) NOT NULL,
- CONSTRAINT [PK_Categories] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Feedbacks](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[CustomerName] [nvarchar](max) NOT NULL,
-	[Description] [nvarchar](max) NOT NULL,
-	[SubmissionDate] [datetime2](7) NOT NULL,
-	[CategoryId] [int] NOT NULL,
- CONSTRAINT [PK_Feedbacks] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20240410192124_Initial', N'8.0.4')
-GO
-SET IDENTITY_INSERT [dbo].[Categories] ON 
-GO
-INSERT [dbo].[Categories] ([Id], [Name], [Description]) VALUES (1, N'Category1', N'Category1')
-GO
-INSERT [dbo].[Categories] ([Id], [Name], [Description]) VALUES (2, N'Category2', N'Category2')
-GO
-SET IDENTITY_INSERT [dbo].[Categories] OFF
+IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Feedbacks')
+BEGIN
+    -- Create the Feedbacks table
+    CREATE TABLE Feedbacks (
+        Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+        CustomerName NVARCHAR(MAX) NOT NULL,
+        Description NVARCHAR(MAX) NOT NULL,
+        SubmissionDate DATETIME NOT NULL,
+        CategoryId INT NOT NULL,
+        FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
+    )
+END
 GO
 
-CREATE NONCLUSTERED INDEX [IX_Feedbacks_CategoryId] ON [dbo].[Feedbacks]
-(
-	[CategoryId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+-- Create the stored procedure sp_AddFeedback
+CREATE OR ALTER PROCEDURE sp_AddFeedback
+    @CustomerName NVARCHAR(MAX),
+    @Description NVARCHAR(MAX),
+    @CategoryId INT
+AS
+BEGIN 
+    BEGIN TRY
+        BEGIN TRANSACTION
+
+        INSERT INTO Feedbacks (CustomerName, Description, SubmissionDate, CategoryId)
+        VALUES (@CustomerName, @Description, GETDATE(), @CategoryId)
+
+        COMMIT TRANSACTION
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION
+
+        THROW
+    END CATCH
+END 
 GO
-ALTER TABLE [dbo].[Feedbacks]  WITH CHECK ADD  CONSTRAINT [FK_Feedbacks_Categories_CategoryId] FOREIGN KEY([CategoryId])
-REFERENCES [dbo].[Categories] ([Id])
-ON DELETE CASCADE
+
+-- Create the stored procedure sp_UpdateFeedback
+CREATE OR ALTER PROCEDURE sp_UpdateFeedback
+    @FeedbackId INT,
+    @CustomerName NVARCHAR(MAX),
+    @Description NVARCHAR(MAX),
+    @CategoryId INT
+AS
+BEGIN 
+    BEGIN TRY
+        BEGIN TRANSACTION
+
+        UPDATE Feedbacks 
+        SET CustomerName = @CustomerName, 
+            Description = @Description,
+            CategoryId = @CategoryId
+        WHERE Id = @FeedbackId
+
+        COMMIT TRANSACTION
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION
+
+        THROW
+    END CATCH
+END
 GO
-ALTER TABLE [dbo].[Feedbacks] CHECK CONSTRAINT [FK_Feedbacks_Categories_CategoryId]
+
+-- Create the stored procedure sp_DeleteFeedback
+CREATE OR ALTER PROCEDURE sp_DeleteFeedback
+    @FeedbackId INT
+AS
+BEGIN 
+    BEGIN TRY
+        BEGIN TRANSACTION
+
+        DELETE FROM Feedbacks WHERE Id = @FeedbackId
+
+        COMMIT TRANSACTION
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION
+
+        THROW
+    END CATCH
+END 
 GO
-USE [master]
+
+-- Create the stored procedure sp_GetFeedbacksByDatesRange
+CREATE OR ALTER PROCEDURE sp_GetFeedbacksByDatesRange
+    @StartDate DATETIME,
+    @EndDate DATETIME
+AS
+BEGIN
+    BEGIN TRY
+        SELECT 
+            F.Id AS FeedbackId, 
+            F.CustomerName, 
+            F.Description, 
+            F.SubmissionDate, 
+            F.CategoryId, 
+            C.Name AS CategoryName
+        FROM 
+            Feedbacks F
+        JOIN 
+            Categories C ON F.CategoryId = C.Id
+        WHERE 
+            F.SubmissionDate BETWEEN @StartDate AND @EndDate
+    END TRY
+    BEGIN CATCH
+        THROW
+    END CATCH
+END
 GO
-ALTER DATABASE [FeedbackSystem] SET  READ_WRITE 
+
+-- Create the stored procedure sp_GetFeedbackById
+CREATE OR ALTER PROCEDURE sp_GetFeedbackById
+    @Id INT
+AS
+BEGIN
+    BEGIN TRY
+        SELECT 
+            F.Id AS FeedbackId, 
+            F.CustomerName, 
+            F.Description, 
+            F.SubmissionDate, 
+            F.CategoryId, 
+            C.Name AS CategoryName
+        FROM 
+            Feedbacks F
+        JOIN 
+            Categories C ON F.CategoryId = C.Id
+        WHERE 
+            F.Id = @Id
+    END TRY
+    BEGIN CATCH
+        THROW
+    END CATCH
+END
+GO
+
+-- Create the stored procedure sp_GetCategories
+CREATE OR ALTER PROCEDURE sp_GetCategories
+AS
+BEGIN
+    BEGIN TRY
+        SELECT 
+            Id, 
+            Name
+        FROM 
+            Categories
+    END TRY
+    BEGIN CATCH
+        THROW
+    END CATCH
+END
+GO
+
+-- Add data to Categories if it's empty
+IF NOT EXISTS (SELECT 1 FROM Categories)
+BEGIN
+    INSERT INTO Categories (Name) VALUES ('Category 1')
+    INSERT INTO Categories (Name) VALUES ('Category 2')
+    INSERT INTO Categories (Name) VALUES ('Category 3')
+END
+
+USE master
+GO
+
+-- Create the login and user for FeedbackSystem
+IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = 'FeedbackUser')
+BEGIN
+    CREATE LOGIN FeedbackUser WITH PASSWORD = 'FeedbackUser', CHECK_POLICY = OFF
+END
+GO
+
+USE FeedbackSystem
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = 'FeedbackUser')
+BEGIN
+    CREATE USER FeedbackUser FOR LOGIN FeedbackUser
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.database_role_members WHERE role_principal_id = DATABASE_PRINCIPAL_ID('sysadmin') AND member_principal_id = USER_ID('FeedbackUser'))
+BEGIN
+ALTER SERVER ROLE sysadmin ADD MEMBER FeedbackUser
+END
 GO

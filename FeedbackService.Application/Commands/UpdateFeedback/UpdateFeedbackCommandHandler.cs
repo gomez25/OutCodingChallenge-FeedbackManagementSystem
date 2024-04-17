@@ -29,8 +29,7 @@ internal class UpdateFeedbackCommandHandler(UpdateFeedbackCommandValidator valid
             Id = command.Id,
             CustomerName = command.CustomerName,
             Description = command.Description,
-            CategoryId = command.CategoryId,
-            SubmissionDate = DateTime.UtcNow
+            CategoryId = command.CategoryId
         };
 
 

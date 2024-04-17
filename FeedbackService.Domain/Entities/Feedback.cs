@@ -1,6 +1,4 @@
 ﻿using FeedbackService.Domain.Entities.Common;
-using System;
-using System.Collections.Generic;
 
 namespace FeedbackService.Domain.Entities
 {

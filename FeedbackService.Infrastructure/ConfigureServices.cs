@@ -2,10 +2,8 @@
 using FeedbackService.Infrastructure.Persistence.Contexts;
 using FeedbackService.Infrastructure.Persistence.Repositories;
 using FeedbackService.Infrastructure.Persistence.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace FeedbackService.Infrastructure;
 
@@ -17,10 +15,7 @@ public static class ConfigureServices
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
-        //Add Context
-        services.AddDbContext<FeedbackContext>(opt => 
-        opt.UseSqlServer(configuration.GetConnectionString("Db"), a => a.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)));
-
+        services.AddSingleton(new FeedbackContext(configuration.GetConnectionString("Db")));
 
         return services;
     }

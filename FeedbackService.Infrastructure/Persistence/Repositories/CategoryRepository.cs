@@ -1,8 +1,8 @@
-﻿using FeedbackService.Domain.Entities;
+﻿using FeedbackService.Domain.Constants;
+using FeedbackService.Domain.Entities;
 using FeedbackService.Domain.Exceptions;
 using FeedbackService.Domain.Repositories;
 using FeedbackService.Infrastructure.Persistence.Contexts;
-using Microsoft.EntityFrameworkCore;
 
 namespace FeedbackService.Infrastructure.Persistence.Repositories;
 
@@ -15,12 +15,23 @@ internal class CategoryRepository(FeedbackContext context) : ICategoryRepository
     #region Methods
     public async Task<IEnumerable<Category>> GetAll()
     {
-        var result = await _context.Categories.ToListAsync();
+        List<Category> categories = [];
 
-        if (result.Count == 0)
+        var result = await _context.ExecuteQueryAsync(StoredProcedureNames.GET_CATEGORIES);
+        while (await result.ReadAsync())
+        {
+            Category category = new()
+            {
+                Id = Convert.ToInt32(result["Id"]),
+                Name = result["Name"].ToString()
+            };
+
+            categories.Add(category);
+        }
+        if (categories.Count == 0)
             throw new EmptyListException("The category table are empty");
 
-        return result;
+        return categories;
     }
     #endregion
 }

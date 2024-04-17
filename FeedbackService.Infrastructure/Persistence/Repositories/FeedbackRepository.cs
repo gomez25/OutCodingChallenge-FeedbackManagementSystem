@@ -1,9 +1,11 @@
-﻿using FeedbackService.Domain.DTOs;
+﻿using FeedbackService.Domain.Constants;
+using FeedbackService.Domain.DTOs;
 using FeedbackService.Domain.Entities;
 using FeedbackService.Domain.Exceptions;
 using FeedbackService.Domain.Repositories;
 using FeedbackService.Infrastructure.Persistence.Contexts;
-using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace FeedbackService.Infrastructure.Persistence.Repositories;
 
@@ -16,33 +18,45 @@ internal class FeedbackRepository(FeedbackContext context) : IFeedbackRepository
     #region Methods
     public async Task<bool> AddAsync(Feedback newFeedback)
     {
-        _context.Feedbacks.Add(newFeedback);
-        return await _context.SaveChangesAsync() > 0;
+        SqlParameter[] parameters =
+        [
+            new SqlParameter("@CustomerName", SqlDbType.NVarChar) { Value = newFeedback.CustomerName },
+            new SqlParameter("@Description", SqlDbType.NVarChar) { Value = newFeedback.Description },
+            new SqlParameter("@CategoryId", SqlDbType.Int) { Value = newFeedback.CategoryId },
+        ];
+        return await _context.ExecuteNonQueryAsync(StoredProcedureNames.ADD_FEEDBACK, parameters: parameters);
     }
 
-    public async Task<bool> DeleteAsync(Feedback feedback)
+    public async Task<bool> DeleteAsync(int feedbackId)
     {
-        _context.Feedbacks.Remove(feedback);
-        return await _context.SaveChangesAsync() > 0;
+        SqlParameter[] parameters = [new SqlParameter("@FeedbackId", SqlDbType.Int) { Value = feedbackId }];
+        return await _context.ExecuteNonQueryAsync(StoredProcedureNames.DELETE_FEEDBACK, parameters: parameters);
     }
 
     public async Task<FeedbackDto> GetFeedbackById(int id)
     {
-        var result = await(from feedback in _context.Feedbacks
-                           join category in _context.Categories
-                           on feedback.CategoryId equals category.Id
-                           where feedback.Id == id
-                           select new FeedbackDto
-                           {
-                               Id = feedback.Id,
-                               CustomerName = feedback.CustomerName,
-                               CategoryName = category.Name,
-                               CategoryId = category.Id,
-                               Description = feedback.Description,
-                               SubmissionDate = feedback.SubmissionDate
-                           }).FirstOrDefaultAsync();
+        FeedbackDto response = default;
+        SqlParameter[] parameters =
+        [
+            new SqlParameter("@Id", SqlDbType.Int) { Value = id },
+        ];
+        var result = await _context.ExecuteQueryAsync(StoredProcedureNames.GET_FEEDBACKBYID, parameters: parameters);
 
-        return result ?? throw new NotFoundException("Feedback was not found");
+        while (await result.ReadAsync())
+        {
+            response = new()
+            {
+                Id = Convert.ToInt32(result["FeedbackId"]),
+                CustomerName = result["CustomerName"].ToString(),
+                Description = result["Description"].ToString(),
+                SubmissionDate = Convert.ToDateTime(result["SubmissionDate"]),
+                CategoryId = Convert.ToInt32(result["CategoryId"]),
+                CategoryName = result["CategoryName"].ToString()
+            };
+        }
+
+        return response ?? throw new NotFoundException("Feedback was not found");
+
     }
 
     public async Task<IEnumerable<CategoryFeedbackDto>> GetLastMonthAsync()
@@ -50,35 +64,72 @@ internal class FeedbackRepository(FeedbackContext context) : IFeedbackRepository
         var startDate = DateTime.UtcNow.AddMonths(-1);
         var endDate = DateTime.UtcNow;
 
-        var result = await (from feedback in _context.Feedbacks
-                            join category in _context.Categories
-                            on feedback.CategoryId equals category.Id
-                            where feedback.SubmissionDate >= startDate && feedback.SubmissionDate <= endDate
-                            orderby category.Name // Optionally, you can order the results by category name
-                            group new { feedback, category } by new { category.Id, category.Name } into categoryGroup
-                            select new CategoryFeedbackDto
-                            {
-                                CategoryId = categoryGroup.Key.Id,
-                                CategoryName = categoryGroup.Key.Name,
-                                Feedbacks = categoryGroup.Select(f => new Feedback
-                                {
-                                    Id = f.feedback.Id,
-                                    CustomerName = f.feedback.CustomerName,
-                                    Description = f.feedback.Description,
-                                    SubmissionDate = f.feedback.SubmissionDate
-                                }).ToList()
-                            }).ToListAsync();
 
-        if (result.Count == 0)
+        List<CategoryFeedbackFromSpDto> feedbacks = [];
+        List<CategoryFeedbackDto> feedbacksGroupingByCategory = [];
+
+        SqlParameter[] parameters =
+        [
+            new SqlParameter("@StartDate", SqlDbType.DateTime) { Value = startDate },
+            new SqlParameter("@EndDate", SqlDbType.DateTime) { Value = endDate },
+        ];
+        var result = await _context.ExecuteQueryAsync(StoredProcedureNames.GET_FEEDBACKSBYDATESRANGE, parameters: parameters);
+
+        while (await result.ReadAsync())
+        {
+            CategoryFeedbackFromSpDto feedback = new()
+            {
+                FeedbackId = Convert.ToInt32(result["FeedbackId"]),
+                CustomerName = result["CustomerName"].ToString(),
+                Description = result["Description"].ToString(),
+                SubmissionDate = Convert.ToDateTime(result["SubmissionDate"]),
+                CategoryId = Convert.ToInt32(result["CategoryId"]),
+                CategoryName = result["CategoryName"].ToString(),
+            };
+
+            feedbacks.Add(feedback);
+        }
+        if (feedbacks.Count == 0)
             throw new EmptyListException("The category table are empty");
 
-        return result;
+        return ConvertToCategoryFeedbackDto(feedbacks);
     }
 
     public async Task<bool> UpdateAsync(Feedback existingFeedback)
     {
-        _context.Feedbacks.Update(existingFeedback);
-        return await _context.SaveChangesAsync() > 0;
+        SqlParameter[] parameters =
+        [
+            new SqlParameter("@FeedbackId", SqlDbType.Int) { Value = existingFeedback.Id },
+            new SqlParameter("@CustomerName", SqlDbType.NVarChar) { Value = existingFeedback.CustomerName },
+            new SqlParameter("@Description", SqlDbType.NVarChar) { Value = existingFeedback.Description },
+            new SqlParameter("@CategoryId", SqlDbType.Int) { Value = existingFeedback.CategoryId }
+        ];
+
+        return await _context.ExecuteNonQueryAsync(StoredProcedureNames.UPDATE_FEEDBACK, parameters: parameters);
+    }
+
+    #endregion
+
+    #region Private Methods
+    private static List<CategoryFeedbackDto> ConvertToCategoryFeedbackDto(List<CategoryFeedbackFromSpDto> categoryFeedbackFromSpDtos)
+    {
+        var categoryFeedbackDtos = categoryFeedbackFromSpDtos
+            .GroupBy(dto => new { dto.CategoryId, dto.CategoryName })
+            .Select(group => new CategoryFeedbackDto
+            {
+                CategoryId = group.Key.CategoryId,
+                CategoryName = group.Key.CategoryName,
+                Feedbacks = group.Select(dto => new Feedback
+                {
+                    Id = dto.FeedbackId,
+                    CustomerName = dto.CustomerName,
+                    Description = dto.Description,
+                    SubmissionDate = dto.SubmissionDate
+                })
+            })
+            .ToList();
+
+        return categoryFeedbackDtos;
     }
     #endregion
 }

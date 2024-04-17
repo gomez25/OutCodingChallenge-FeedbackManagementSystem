@@ -35,7 +35,7 @@
         return isValid;
     }
 
-    submitForm() {
+    submitForm(successMessage) {
         var _this = this;
 
         $.ajax({
@@ -43,22 +43,17 @@
             type: this.feedbackForm.attr("method"),
             data: this.feedbackForm.serialize(),
             success: function (result) {
-
-                if (result.success) {
-                    window.location.href = "/Feedback/Index";
-                }
+                _this.addBadge(successMessage);
             },
             error: function () {
                 _this.feedbackResult.html("An error occurred while saving feedback.");
             }
         });
     }
-}
 
-var feedbackForm = new FeedbackForm();
-
-feedbackForm.submitBtn.click(function () {
-    if (feedbackForm.validateForm()) {
-        feedbackForm.submitForm();
+    addBadge(successMessage) {
+        this.feedbackForm.next(".badge").remove();
+        var badge = $("<span class='badge badge-success'>" + successMessage + "</span>");
+        this.feedbackForm.after(badge);
     }
-});
+}

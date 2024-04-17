@@ -1,22 +1,52 @@
-﻿using FeedbackService.Domain.Entities;
-using FeedbackService.Infrastructure.Persistence.Configuration;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Data;
+using System.Data.SqlClient;
 
 namespace FeedbackService.Infrastructure.Persistence.Contexts;
 
-public class FeedbackContext(DbContextOptions options) : DbContext(options)
+public class FeedbackContext(string connectionString)
 {
-    public virtual DbSet<Feedback> Feedbacks { get; set; }
-    public virtual DbSet<Category> Categories { get; set; }
+    private readonly string _connectionString = connectionString;
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    public string ConnectionString => _connectionString;
+
+    public async Task<bool> ExecuteNonQueryAsync(string storeProcedureName, CommandType commandType = CommandType.StoredProcedure, SqlParameter[] parameters = null)
     {
-        base.OnModelCreating(builder);
-        builder.ApplyConfiguration(new FeedbackConfiguration());
+        using SqlConnection connection = new(_connectionString);
+        using SqlCommand command = new(storeProcedureName, connection);
+        command.CommandType = commandType;
+
+        if (parameters != null)
+        {
+            foreach (var parameter in parameters)
+            {
+                command.Parameters.Add(parameter);
+            }
+        }
+
+        await connection.OpenAsync();
+
+        int rowsAffected = await command.ExecuteNonQueryAsync();
+        return rowsAffected > 0;
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task<SqlDataReader> ExecuteQueryAsync(string storeProcedureName, CommandType commandType = CommandType.StoredProcedure, SqlParameter[] parameters = null)
     {
-        return await base.SaveChangesAsync(cancellationToken);
+        SqlConnection connection = new(_connectionString);
+        SqlCommand command = new(storeProcedureName, connection)
+        {
+            CommandType = commandType
+        };
+
+        if (parameters != null)
+        {
+            foreach (var parameter in parameters)
+            {
+                command.Parameters.Add(parameter);
+            }
+        }
+
+        await connection.OpenAsync();
+
+        return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
     }
 }
